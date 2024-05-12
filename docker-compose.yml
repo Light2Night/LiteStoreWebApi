@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  api:
+    image: light2night/webapi:latest
+    container_name: api-container
+    ports:
+      - "5000:8080"
+    volumes:
+      - appvol:/app/Data
+  frontend:
+    image: light2night/frontend:latest
+    container_name: frontend-container
+    ports:
+      - "80:5173"
+
+volumes:
+  appvol:
