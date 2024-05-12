@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,7 @@ public class PostOfficeController(
 	public async Task<IActionResult> GetBySettlementId(long settlementId) {
 		var postOffices = await context.PostOffices
 			.Where(po => po.SettlementId == settlementId)
-			.Select(po => mapper.Map<PostOfficeItemViewModel>(po))
+			.ProjectTo<PostOfficeItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(postOffices);

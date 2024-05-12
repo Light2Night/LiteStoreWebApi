@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using Data.Entities.Identity;
@@ -46,7 +47,7 @@ public class OrderController(
 			query = query.Take((int)filter.Limit);
 
 		var ordersList = await query
-			.Select(o => mapper.Map<OrderItemViewModel>(o))
+			.ProjectTo<OrderItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(new FilteredOrdersViewModel {
@@ -81,7 +82,7 @@ public class OrderController(
 			query = query.Take((int)filter.Limit);
 
 		var ordersList = await query
-			.Select(o => mapper.Map<CustomerOrderItemViewModel>(o))
+			.ProjectTo<CustomerOrderItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(new FilteredCustomersOrdersViewModel {
@@ -124,7 +125,7 @@ public class OrderController(
 				var orderedProducts = await context.BasketProducts
 					.Include(bp => bp.Product)
 					.Where(bp => bp.UserId == user.Id)
-					.Select(bp => mapper.Map<OrderedProduct>(bp))
+					.ProjectTo<OrderedProduct>(mapper.ConfigurationProvider)
 					.ToListAsync();
 
 				orderedProducts.ForEach(op => op.OrderId = order.Id);

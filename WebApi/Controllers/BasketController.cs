@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using Data.Entities.Identity;
@@ -30,7 +31,7 @@ public class BasketController(
 				.Include(bp => bp.Product)
 					.ThenInclude(p => p.Category)
 				.Where(bp => bp.UserId == userId)
-				.Select(bp => mapper.Map<BasketItemViewModel>(bp))
+				.ProjectTo<BasketItemViewModel>(mapper.ConfigurationProvider)
 				.ToArrayAsync();
 
 			return Ok(basketItems);

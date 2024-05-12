@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using FluentValidation;
@@ -22,7 +23,7 @@ public class AreasController(
 	[Authorize(Roles = "Admin,User")]
 	public async Task<IActionResult> GetAll() {
 		var areas = await context.Areas
-			.Select(a => mapper.Map<AreaItemViewModel>(a))
+			.ProjectTo<AreaItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(areas);

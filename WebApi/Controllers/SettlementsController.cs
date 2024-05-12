@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using FluentValidation;
@@ -23,7 +24,7 @@ public class SettlementsController(
 	public async Task<IActionResult> GetByAreaId(long areaId) {
 		var settlement = await context.Settlements
 			.Where(s => s.AreaId == areaId)
-			.Select(s => mapper.Map<SettlementItemViewModel>(s))
+			.ProjectTo<SettlementItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(settlement);

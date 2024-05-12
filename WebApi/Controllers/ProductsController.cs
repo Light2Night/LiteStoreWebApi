@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Context;
 using Data.Entities;
 using FluentValidation;
@@ -26,7 +27,7 @@ public class ProductsController(
 			.Include(p => p.Images.OrderBy(i => i.Order))
 			.Where(p => !p.IsDeleted)
 			.OrderBy(p => p.Id)
-			.Select(p => mapper.Map<ProductItemViewModel>(p))
+			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(productEntities);
@@ -76,7 +77,7 @@ public class ProductsController(
 		}
 
 		var list = await products
-			.Select(p => mapper.Map<ProductItemViewModel>(p))
+			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
 			.ToListAsync();
 
 		return Ok(new FilteredProductsViewModel {
@@ -90,14 +91,12 @@ public class ProductsController(
 		if (!await context.Products.AnyAsync(p => p.Id == id))
 			return BadRequest("Product with this id is not exists");
 
-		var productEntities = await context.Products
+		var productVm = await context.Products
 			.Include(p => p.Category)
 			.Include(p => p.Images.OrderBy(i => i.Order))
 			.Where(p => !p.IsDeleted)
-			.OrderBy(p => p.Id)
+			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
 			.FirstAsync(p => p.Id == id);
-
-		var productVm = mapper.Map<ProductItemViewModel>(productEntities);
 
 		return Ok(productVm);
 	}
