@@ -19,7 +19,7 @@ public class AccountController(
 	) : ControllerBase {
 
 	[HttpPost]
-	public async Task<IActionResult> Login([FromForm] LoginViewModel model) {
+	public async Task<IActionResult> Login([FromForm] LoginVm model) {
 		User? user = await userManager.Users
 			.Include(u => u.UserRoles)
 				.ThenInclude(ur => ur.Role)
@@ -32,11 +32,11 @@ public class AccountController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Registration([FromForm] RegisterViewModel model) {
+	public async Task<IActionResult> Registration([FromForm] RegisterVm model) {
 		if (await userManager.FindByEmailAsync(model.Email) is not null)
 			return BadRequest("The user with this email is already registered");
 
-		User user = mapper.Map<RegisterViewModel, User>(model);
+		User user = mapper.Map<RegisterVm, User>(model);
 
 		try {
 			user.Photo = await ImageWorker.SaveImageAsync(model.Image);

@@ -1,5 +1,5 @@
 ﻿namespace WebApi.Models.Basket;
 
-public class TotalPriceViewModel {
+public class TotalPriceVm {
 	public double TotalPrice { get; set; }
 }

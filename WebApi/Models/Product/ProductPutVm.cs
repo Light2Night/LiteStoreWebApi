@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Product;
 
-public class ProductPutViewModel {
+public class ProductPutVm {
 	public long Id { get; set; }
 
 	public string Name { get; set; } = null!;

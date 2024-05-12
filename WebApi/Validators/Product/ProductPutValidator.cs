@@ -6,7 +6,7 @@ using WebApi.Services;
 
 namespace WebApi.Validators.Product;
 
-public class ProductPutValidator : AbstractValidator<ProductPutViewModel> {
+public class ProductPutValidator : AbstractValidator<ProductPutVm> {
 	private readonly DataContext _context;
 
 	public ProductPutValidator(DataContext context) {

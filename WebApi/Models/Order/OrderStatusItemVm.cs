@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Order;
 
-public class OrderStatusItemViewModel {
+public class OrderStatusItemVm {
 	public long Id { get; set; }
 
 	public string Status { get; set; } = null!;

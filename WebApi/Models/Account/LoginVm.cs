@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Account;
 
-public class LoginViewModel {
+public class LoginVm {
 	/// <summary>
 	/// Електронна пошта
 	/// </summary>

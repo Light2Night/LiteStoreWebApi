@@ -5,7 +5,7 @@ using WebApi.Models.Areas;
 
 namespace WebApi.Validators.Area;
 
-public class AreaUpdateValidator : AbstractValidator<UpdateAreaViewModel> {
+public class AreaUpdateValidator : AbstractValidator<UpdateAreaVm> {
 	private readonly DataContext _context;
 
 	public AreaUpdateValidator(DataContext context) {

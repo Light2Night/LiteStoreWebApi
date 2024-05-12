@@ -5,7 +5,7 @@ using WebApi.Models.Settlement;
 
 namespace WebApi.Validators.Settlement;
 
-public class SettlementCreateValidator : AbstractValidator<CreateSettlementViewModel> {
+public class SettlementCreateValidator : AbstractValidator<CreateSettlementVm> {
 	private readonly DataContext _context;
 
 	public SettlementCreateValidator(DataContext context) {

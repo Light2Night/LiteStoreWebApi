@@ -1,8 +1,7 @@
 ﻿namespace WebApi.Models.Category;
 
-public class CategoryItemViewModel {
-	public long Id { get; set; }
+public class CategoryCreateVm {
 	public string Name { get; set; } = null!;
-	public string Image { get; set; } = null!;
+	public IFormFile Image { get; set; } = null!;
 	public string Description { get; set; } = null!;
 }

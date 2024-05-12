@@ -15,8 +15,8 @@ namespace WebApi.Controllers;
 public class SettlementsController(
 	DataContext context,
 	IMapper mapper,
-	IValidator<CreateSettlementViewModel> createValidator,
-	IValidator<UpdateSettlementViewModel> updateValidator
+	IValidator<CreateSettlementVm> createValidator,
+	IValidator<UpdateSettlementVm> updateValidator
 	) : ControllerBase {
 
 	[HttpGet("{areaId}")]
@@ -24,7 +24,7 @@ public class SettlementsController(
 	public async Task<IActionResult> GetByAreaId(long areaId) {
 		var settlement = await context.Settlements
 			.Where(s => s.AreaId == areaId)
-			.ProjectTo<SettlementItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<SettlementItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(settlement);
@@ -32,7 +32,7 @@ public class SettlementsController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Create([FromForm] CreateSettlementViewModel model) {
+	public async Task<IActionResult> Create([FromForm] CreateSettlementVm model) {
 		var validationResult = await createValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)
@@ -47,7 +47,7 @@ public class SettlementsController(
 
 	[HttpPut]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Update(UpdateSettlementViewModel model) {
+	public async Task<IActionResult> Update(UpdateSettlementVm model) {
 		var validationResult = await updateValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)

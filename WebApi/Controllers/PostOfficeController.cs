@@ -21,7 +21,7 @@ public class PostOfficeController(
 	public async Task<IActionResult> GetBySettlementId(long settlementId) {
 		var postOffices = await context.PostOffices
 			.Where(po => po.SettlementId == settlementId)
-			.ProjectTo<PostOfficeItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<PostOfficeItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(postOffices);
@@ -29,7 +29,7 @@ public class PostOfficeController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Create([FromForm] CreatePostOfficeViewModel model) {
+	public async Task<IActionResult> Create([FromForm] CreatePostOfficeVm model) {
 		try {
 			var postOfice = mapper.Map<PostOffice>(model);
 			await context.AddAsync(postOfice);

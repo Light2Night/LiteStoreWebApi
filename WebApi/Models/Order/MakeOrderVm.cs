@@ -1,5 +1,5 @@
 ﻿namespace WebApi.Models.Order;
 
-public class MakeOrderViewModel {
+public class MakeOrderVm {
 	public long PostOfficeId { get; set; }
 }

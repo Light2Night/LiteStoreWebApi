@@ -15,8 +15,8 @@ namespace WebApi.Controllers;
 public class CategoriesController(
 	DataContext context,
 	IMapper mapper,
-	IValidator<CategoryCreateViewModel> createValidator,
-	IValidator<CategoryUpdateViewModel> updateValidator,
+	IValidator<CategoryCreateVm> createValidator,
+	IValidator<CategoryUpdateVm> updateValidator,
 	ICategoryControllerHelper helper
 	) : ControllerBase {
 
@@ -24,14 +24,14 @@ public class CategoriesController(
 	public async Task<IActionResult> GetAll() {
 		var list = await context.Categories
 			.Where(c => !c.IsDeleted)
-			.ProjectTo<CategoryItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<CategoryItemVm>(mapper.ConfigurationProvider)
 			.ToListAsync();
 
 		return Ok(list);
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetFiltered([FromQuery] CategoryFilterViewModel filter) {
+	public async Task<IActionResult> GetFiltered([FromQuery] CategoryFilterVm filter) {
 		var categories = context.Categories
 			.OrderBy(c => c.Id)
 			.Where(c => !c.IsDeleted);
@@ -54,10 +54,10 @@ public class CategoriesController(
 		}
 
 		var list = await categories
-			.ProjectTo<CategoryItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<CategoryItemVm>(mapper.ConfigurationProvider)
 			.ToListAsync();
 
-		return Ok(new FilteredCategoriesViewModel {
+		return Ok(new FilteredCategoriesVm {
 			FilteredCategories = list,
 			AvailableCategories = availableCategories
 		});
@@ -65,7 +65,7 @@ public class CategoriesController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Create([FromForm] CategoryCreateViewModel model) {
+	public async Task<IActionResult> Create([FromForm] CategoryCreateVm model) {
 		var validationResult = await createValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)
@@ -82,7 +82,7 @@ public class CategoriesController(
 
 	[HttpPut]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Update([FromForm] CategoryUpdateViewModel model) {
+	public async Task<IActionResult> Update([FromForm] CategoryUpdateVm model) {
 		var validationResult = await updateValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)

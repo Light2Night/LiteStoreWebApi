@@ -6,7 +6,7 @@ using WebApi.Models.Category;
 
 namespace WebApi.Validators.Product;
 
-public class CategoryUpdateValidator : AbstractValidator<CategoryUpdateViewModel> {
+public class CategoryUpdateValidator : AbstractValidator<CategoryUpdateVm> {
 	private readonly DataContext _context;
 
 	public CategoryUpdateValidator(DataContext context) {
@@ -35,7 +35,7 @@ public class CategoryUpdateValidator : AbstractValidator<CategoryUpdateViewModel
 				.WithMessage("Description is too long");
 	}
 
-	private bool IsAnyNotNullValue(CategoryUpdateViewModel model) {
+	private bool IsAnyNotNullValue(CategoryUpdateVm model) {
 		return AnyNotNull(model.Name, model.Image, model.Description);
 	}
 
@@ -50,7 +50,7 @@ public class CategoryUpdateValidator : AbstractValidator<CategoryUpdateViewModel
 			.AnyAsync(token);
 	}
 
-	private async Task<bool> IsUniqueNameAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken) {
+	private async Task<bool> IsUniqueNameAsync(CategoryUpdateVm model, CancellationToken cancellationToken) {
 		if (model.Name is null) {
 			return true;
 		}

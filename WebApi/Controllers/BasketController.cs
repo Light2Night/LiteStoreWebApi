@@ -25,13 +25,13 @@ public class BasketController(
 		try {
 			long userId = (await identityService.GetCurrentUserAsync(this)).Id;
 
-			ICollection<BasketItemViewModel> basketItems = await context.BasketProducts
+			ICollection<BasketItemVm> basketItems = await context.BasketProducts
 				.Include(bp => bp.Product)
 					.ThenInclude(p => p.Images)
 				.Include(bp => bp.Product)
 					.ThenInclude(p => p.Category)
 				.Where(bp => bp.UserId == userId)
-				.ProjectTo<BasketItemViewModel>(mapper.ConfigurationProvider)
+				.ProjectTo<BasketItemVm>(mapper.ConfigurationProvider)
 				.ToArrayAsync();
 
 			return Ok(basketItems);
@@ -127,6 +127,6 @@ public class BasketController(
 			.Where(bp => bp.UserId == user.Id)
 			.SumAsync(bp => bp.Product.Price * bp.Quantity);
 
-		return Ok(new TotalPriceViewModel { TotalPrice = totalPrice });
+		return Ok(new TotalPriceVm { TotalPrice = totalPrice });
 	}
 }

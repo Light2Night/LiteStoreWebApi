@@ -15,15 +15,15 @@ namespace WebApi.Controllers;
 public class AreasController(
 	DataContext context,
 	IMapper mapper,
-	IValidator<CreateAreaViewModel> createValidator,
-	IValidator<UpdateAreaViewModel> updateValidator
+	IValidator<CreateAreaVm> createValidator,
+	IValidator<UpdateAreaVm> updateValidator
 	) : ControllerBase {
 
 	[HttpGet]
 	[Authorize(Roles = "Admin,User")]
 	public async Task<IActionResult> GetAll() {
 		var areas = await context.Areas
-			.ProjectTo<AreaItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<AreaItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(areas);
@@ -31,7 +31,7 @@ public class AreasController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Create([FromForm] CreateAreaViewModel model) {
+	public async Task<IActionResult> Create([FromForm] CreateAreaVm model) {
 		var validationResult = await createValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)
@@ -46,7 +46,7 @@ public class AreasController(
 
 	[HttpPut]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Update(UpdateAreaViewModel model) {
+	public async Task<IActionResult> Update(UpdateAreaVm model) {
 		var validationResult = await updateValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)

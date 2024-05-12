@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Product;
 
-public class ProductCreateViewModel {
+public class ProductCreateVm {
 	public string Name { get; set; } = null!;
 
 	public ICollection<IFormFile> Images { get; set; } = null!;

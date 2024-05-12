@@ -6,7 +6,7 @@ using WebApi.Services;
 
 namespace WebApi.Validators.Product;
 
-public class CategoryCreateValidator : AbstractValidator<CategoryCreateViewModel> {
+public class CategoryCreateValidator : AbstractValidator<CategoryCreateVm> {
 	private readonly DataContext _context;
 
 	public CategoryCreateValidator(DataContext context) {

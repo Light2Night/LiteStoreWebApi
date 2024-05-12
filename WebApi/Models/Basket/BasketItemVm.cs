@@ -2,10 +2,10 @@
 
 namespace WebApi.Models.Basket;
 
-public class BasketItemViewModel {
+public class BasketItemVm {
 	public long Id { get; set; }
 
-	public ProductItemViewModel Product { get; set; } = null!;
+	public ProductItemVm Product { get; set; } = null!;
 
 	public int Quantity { get; set; }
 }

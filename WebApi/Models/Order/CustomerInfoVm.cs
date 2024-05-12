@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Order;
 
-public class CustomerInfo {
+public class CustomerInfoVm {
 	public long Id { get; set; }
 
 	public string FirstName { get; set; } = null!;

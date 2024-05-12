@@ -22,16 +22,16 @@ public class AppMapProfile : Profile {
 
 
 
-		CreateMap<Category, CategoryItemViewModel>();
-		CreateMap<CategoryCreateViewModel, Category>();
+		CreateMap<Category, CategoryItemVm>();
+		CreateMap<CategoryCreateVm, Category>();
 
-		CreateMap<RegisterViewModel, User>();
+		CreateMap<RegisterVm, User>();
 
-		CreateMap<ProductCreateViewModel, Product>()
+		CreateMap<ProductCreateVm, Product>()
 			.ForMember(p => p.Images, opt => opt.Ignore());
-		CreateMap<ProductPutViewModel, Product>()
+		CreateMap<ProductPutVm, Product>()
 			.ForMember(p => p.Images, opt => opt.Ignore());
-		CreateMap<Product, ProductItemViewModel>()
+		CreateMap<Product, ProductItemVm>()
 			.ForMember(
 				dest => dest.Images,
 				opt => opt.MapFrom(
@@ -41,32 +41,32 @@ public class AppMapProfile : Profile {
 				)
 			);
 
-		CreateMap<BasketProduct, BasketItemViewModel>();
+		CreateMap<BasketProduct, BasketItemVm>();
 		CreateMap<BasketProduct, OrderedProduct>()
 			.ForMember(
 				dest => dest.UnitPrice,
 				opt => opt.MapFrom(src => src.Product.Price)
 			);
 
-		CreateMap<OrderStatus, OrderStatusItemViewModel>();
-		CreateMap<Order, OrderItemViewModel>();
-		CreateMap<User, CustomerInfo>();
-		CreateMap<Order, CustomerOrderItemViewModel>()
+		CreateMap<OrderStatus, OrderStatusItemVm>();
+		CreateMap<Order, OrderItemVm>();
+		CreateMap<User, CustomerInfoVm>();
+		CreateMap<Order, CustomerOrderItemVm>()
 			.ForMember(
 				dest => dest.Customer,
 				opt => opt.MapFrom(
 					src => src.User
 				)
 			);
-		CreateMap<OrderedProduct, OrderedProductItemViewModel>();
+		CreateMap<OrderedProduct, OrderedProductItemVm>();
 
-		CreateMap<CreateAreaViewModel, Area>();
-		CreateMap<Area, AreaItemViewModel>();
+		CreateMap<CreateAreaVm, Area>();
+		CreateMap<Area, AreaItemVm>();
 
-		CreateMap<CreateSettlementViewModel, Settlement>();
-		CreateMap<Settlement, SettlementItemViewModel>();
+		CreateMap<CreateSettlementVm, Settlement>();
+		CreateMap<Settlement, SettlementItemVm>();
 
-		CreateMap<CreatePostOfficeViewModel, PostOffice>();
-		CreateMap<PostOffice, PostOfficeItemViewModel>();
+		CreateMap<CreatePostOfficeVm, PostOffice>();
+		CreateMap<PostOffice, PostOfficeItemVm>();
 	}
 }

@@ -12,7 +12,7 @@ public class CategoryControllerHelper(
 	IMapper mapper
 	) : ICategoryControllerHelper {
 
-	public async Task AddCategoryAsync(CategoryCreateViewModel model) {
+	public async Task AddCategoryAsync(CategoryCreateVm model) {
 		var category = mapper.Map<Category>(model);
 		category.Image = await ImageWorker.SaveImageAsync(model.Image);
 
@@ -26,7 +26,7 @@ public class CategoryControllerHelper(
 		}
 	}
 
-	public async Task UpdateCategoryAsync(CategoryUpdateViewModel model) {
+	public async Task UpdateCategoryAsync(CategoryUpdateVm model) {
 		var category = await context.Categories
 			.FirstAsync(c => c.Id == model.Id);
 

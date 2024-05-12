@@ -16,8 +16,8 @@ namespace WebApi.Controllers;
 public class ProductsController(
 	DataContext context,
 	IMapper mapper,
-	IValidator<ProductCreateViewModel> createValidator,
-	IValidator<ProductPutViewModel> putValidator
+	IValidator<ProductCreateVm> createValidator,
+	IValidator<ProductPutVm> putValidator
 	) : ControllerBase {
 
 	[HttpGet]
@@ -27,14 +27,14 @@ public class ProductsController(
 			.Include(p => p.Images.OrderBy(i => i.Order))
 			.Where(p => !p.IsDeleted)
 			.OrderBy(p => p.Id)
-			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<ProductItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		return Ok(productEntities);
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetFiltered([FromQuery] ProductFilterViewModel filter) {
+	public async Task<IActionResult> GetFiltered([FromQuery] ProductFilterVm filter) {
 		var products = context.Products
 			.Include(p => p.Category)
 			.Include(p => p.Images.OrderBy(i => i.Order))
@@ -77,10 +77,10 @@ public class ProductsController(
 		}
 
 		var list = await products
-			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<ProductItemVm>(mapper.ConfigurationProvider)
 			.ToListAsync();
 
-		return Ok(new FilteredProductsViewModel {
+		return Ok(new FilteredProductsVm {
 			FilteredProducts = list,
 			AvailableQuantity = availableQuantity
 		});
@@ -95,7 +95,7 @@ public class ProductsController(
 			.Include(p => p.Category)
 			.Include(p => p.Images.OrderBy(i => i.Order))
 			.Where(p => !p.IsDeleted)
-			.ProjectTo<ProductItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<ProductItemVm>(mapper.ConfigurationProvider)
 			.FirstAsync(p => p.Id == id);
 
 		return Ok(productVm);
@@ -103,7 +103,7 @@ public class ProductsController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Create([FromForm] ProductCreateViewModel model) {
+	public async Task<IActionResult> Create([FromForm] ProductCreateVm model) {
 		var validationResult = await createValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)
@@ -137,7 +137,7 @@ public class ProductsController(
 
 	[HttpPut]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> Put([FromForm] ProductPutViewModel model) {
+	public async Task<IActionResult> Put([FromForm] ProductPutVm model) {
 		var validationResult = await putValidator.ValidateAsync(model);
 
 		if (!validationResult.IsValid)

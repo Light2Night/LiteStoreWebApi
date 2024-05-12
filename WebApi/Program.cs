@@ -103,8 +103,8 @@ builder.Services.AddSwaggerGen(options => {
 
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 
-builder.Services.AddTransient<IValidator<CategoryCreateViewModel>, CategoryCreateValidator>();
-builder.Services.AddTransient<IValidator<CategoryUpdateViewModel>, CategoryUpdateValidator>();
+builder.Services.AddTransient<IValidator<CategoryCreateVm>, CategoryCreateValidator>();
+builder.Services.AddTransient<IValidator<CategoryUpdateVm>, CategoryUpdateValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CategoryCreateValidator>();
 
 builder.Services.AddTransient<ICategoryControllerHelper, CategoryControllerHelper>();

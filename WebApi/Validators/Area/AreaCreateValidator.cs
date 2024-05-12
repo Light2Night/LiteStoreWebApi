@@ -3,7 +3,7 @@ using WebApi.Models.Areas;
 
 namespace WebApi.Validators.Area;
 
-public class AreaCreateValidator : AbstractValidator<CreateAreaViewModel> {
+public class AreaCreateValidator : AbstractValidator<CreateAreaVm> {
 	public AreaCreateValidator() {
 		RuleFor(a => a.Name)
 			.NotNull()

@@ -2,10 +2,10 @@
 
 namespace WebApi.Models.Order;
 
-public class OrderedProductItemViewModel {
+public class OrderedProductItemVm {
 	public long Id { get; set; }
 
-	public ProductItemViewModel Product { get; set; } = null!;
+	public ProductItemVm Product { get; set; } = null!;
 
 	public double UnitPrice { get; set; }
 

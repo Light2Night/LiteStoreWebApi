@@ -2,7 +2,7 @@
 
 namespace WebApi.Services.Interfaces {
 	public interface ICategoryControllerHelper {
-		Task AddCategoryAsync(CategoryCreateViewModel model);
-		Task UpdateCategoryAsync(CategoryUpdateViewModel model);
+		Task AddCategoryAsync(CategoryCreateVm model);
+		Task UpdateCategoryAsync(CategoryUpdateVm model);
 	}
 }

@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Models.Category;
 
-public class CategoryUpdateViewModel {
+public class CategoryUpdateVm {
 	public int Id { get; set; }
 	public string? Name { get; set; }
 	public IFormFile? Image { get; set; }

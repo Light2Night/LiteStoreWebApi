@@ -21,7 +21,7 @@ public class OrderController(
 
 	[HttpGet]
 	[Authorize(Roles = "Admin,User")]
-	public async Task<IActionResult> GetFiltered([FromQuery] OrderFilterViewModel filter) {
+	public async Task<IActionResult> GetFiltered([FromQuery] OrderFilterVm filter) {
 		User user = await identityService.GetCurrentUserAsync(this);
 
 		IQueryable<Order> query = context.Orders
@@ -47,10 +47,10 @@ public class OrderController(
 			query = query.Take((int)filter.Limit);
 
 		var ordersList = await query
-			.ProjectTo<OrderItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<OrderItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		return Ok(new FilteredOrdersViewModel {
+		return Ok(new FilteredOrdersVm {
 			FilteredOrders = ordersList,
 			AvailableQuantity = availableQuantity
 		});
@@ -58,7 +58,7 @@ public class OrderController(
 
 	[HttpGet]
 	[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> GetCustomersOrdersFiltered([FromQuery] OrderFilterViewModel filter) {
+	public async Task<IActionResult> GetCustomersOrdersFiltered([FromQuery] OrderFilterVm filter) {
 		IQueryable<Order> query = context.Orders
 			.Include(o => o.Status)
 			.Include(o => o.PostOffice)
@@ -82,10 +82,10 @@ public class OrderController(
 			query = query.Take((int)filter.Limit);
 
 		var ordersList = await query
-			.ProjectTo<CustomerOrderItemViewModel>(mapper.ConfigurationProvider)
+			.ProjectTo<CustomerOrderItemVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		return Ok(new FilteredCustomersOrdersViewModel {
+		return Ok(new FilteredCustomersOrdersVm {
 			FilteredOrders = ordersList,
 			AvailableQuantity = availableQuantity
 		});
@@ -93,7 +93,7 @@ public class OrderController(
 
 	[HttpPost]
 	[Authorize(Roles = "Admin,User")]
-	public async Task<IActionResult> Order([FromForm] MakeOrderViewModel model) {
+	public async Task<IActionResult> Order([FromForm] MakeOrderVm model) {
 		try {
 			if (!await context.PostOffices.AnyAsync(po => po.Id == model.PostOfficeId))
 				throw new Exception("PostOffices with this id is not exists");
