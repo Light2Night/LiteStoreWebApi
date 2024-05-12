@@ -1,4 +1,4 @@
-# LiteWebApi
+# LiteStore Web API
 
 ## Web API of an online store.
 
