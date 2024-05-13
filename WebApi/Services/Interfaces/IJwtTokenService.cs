@@ -3,5 +3,5 @@
 namespace WebApi.Services.Interfaces;
 
 public interface IJwtTokenService {
-	string CreateToken(User user);
+	Task<string> CreateTokenAsync(User user);
 }

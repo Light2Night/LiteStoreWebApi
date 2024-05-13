@@ -7,7 +7,9 @@ import {store} from "./Redux/Store";
 import {Provider} from "react-redux";
 import {AuthReducerActionType} from "./Redux/Reducer/AuthReducer.ts";
 import axios from "axios";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
+const googleClientId = import.meta.env.VITE_API_GOOGLE_CLIENT_ID;
 const token = localStorage.token;
 
 if (token) {
@@ -29,10 +31,13 @@ if (token) {
     );
 }
 
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <React.StrictMode>
-            <App/>
-        </React.StrictMode>,
+        <GoogleOAuthProvider clientId={googleClientId}>
+            <React.StrictMode>
+                <App/>
+            </React.StrictMode>
+        </GoogleOAuthProvider>
     </Provider>
 )

@@ -1,4 +1,5 @@
 ﻿using Data.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,16 +8,20 @@ using WebApi.Services.Interfaces;
 
 namespace WebApi.Services;
 
-public class JwtTokenService(IConfiguration _configuration) : IJwtTokenService {
-	public string CreateToken(User user) {
+public class JwtTokenService(
+	UserManager<User> userManager,
+	IConfiguration configuration
+	) : IJwtTokenService {
+
+	public async Task<string> CreateTokenAsync(User user) {
 		var key = Encoding.UTF8.GetBytes(
-			_configuration["Jwt:SecretKey"]
-				?? throw new NullReferenceException("Jwt:SecretKey")
+			configuration["Authentication:Jwt:SecretKey"]
+				?? throw new NullReferenceException("Authentication:Jwt:SecretKey")
 		);
 
 		int tokenLifetimeInDays = Convert.ToInt32(
-			_configuration["Jwt:TokenLifetimeInDays"]
-				?? throw new NullReferenceException("Jwt:TokenLifetimeInDays")
+			configuration["Authentication:Jwt:TokenLifetimeInDays"]
+				?? throw new NullReferenceException("Authentication:Jwt:TokenLifetimeInDays")
 		);
 
 		var signinKey = new SymmetricSecurityKey(key);
@@ -26,21 +31,19 @@ public class JwtTokenService(IConfiguration _configuration) : IJwtTokenService {
 		var jwt = new JwtSecurityToken(
 			signingCredentials: signinCredential,
 			expires: DateTime.Now.AddDays(tokenLifetimeInDays),
-			claims: GetClaims(user));
+			claims: await GetClaimsAsync(user));
 
 		return new JwtSecurityTokenHandler().WriteToken(jwt);
 	}
 
-	private static List<Claim> GetClaims(User user) {
+	private async Task<List<Claim>> GetClaimsAsync(User user) {
 		string userEmail = user.Email
 			?? throw new NullReferenceException($"User.Email");
 
-		if (user.UserRoles is null)
-			throw new NullReferenceException("User.UserRoles");
+		var userRoles = await userManager.GetRolesAsync(user);
 
-		var roleClaims = user.UserRoles
-			.Select(ur => ur.Role)
-			.Select(r => new Claim(ClaimTypes.Role, r.Name!))
+		var roleClaims = userRoles
+			.Select(r => new Claim(ClaimTypes.Role, r))
 			.ToList();
 
 		var claims = new List<Claim> {

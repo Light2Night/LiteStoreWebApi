@@ -49,8 +49,8 @@ builder.Services
 
 var singinKey = new SymmetricSecurityKey(
 	Encoding.UTF8.GetBytes(
-		builder.Configuration["Jwt:SecretKey"]
-			?? throw new NullReferenceException("Jwt:SecretKey")
+		builder.Configuration["Authentication:Jwt:SecretKey"]
+			?? throw new NullReferenceException("Authentication:Jwt:SecretKey")
 	)
 );
 

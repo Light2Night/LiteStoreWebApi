@@ -1,7 +1,7 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {imagesDir, loginAsync, registrationAsync} from "../Shared/api.ts";
+import {googleSingInAsync, imagesDir, loginAsync, registrationAsync} from "../Shared/api.ts";
 import {Box, Modal} from "@mui/material";
 import styles from '../styles.module.css';
 import ILoginData from "../Interfaces/Formik/ILoginData.tsx";
@@ -15,6 +15,7 @@ import {useAppSelector} from "../Redux/Hooks/hooks.ts";
 import {Spin} from 'antd';
 import axios from "axios";
 import {ShoppingCartOutlined, ShoppingOutlined} from "@ant-design/icons";
+import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
 
 function Header() {
     const dispatch = useDispatch();
@@ -27,6 +28,28 @@ function Header() {
 
     const [openLoginModal, setOpenLoginModal] = useState(false);
     const [openRegistrationModal, setOpenRegistrationModal] = useState(false);
+
+    const googleAuthSuccess = async (credentialResponse: CredentialResponse) => {
+        if (!credentialResponse.credential) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("credential", credentialResponse.credential);
+
+        const {token} = await googleSingInAsync(formData);
+
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        localStorage.token = token;
+
+        dispatch({
+            type: AuthReducerActionType.LOGIN_USER,
+            payload: jwtDecode<IUserData>(token)
+        });
+
+        setOpenLoginModal(false);
+        setOpenRegistrationModal(false);
+    };
 
     const loginForm = (
         <Formik<ILoginData>
@@ -95,6 +118,9 @@ function Header() {
                             <button className="btn btn-primary mt-4" style={{marginLeft: 10}}
                                     onClick={() => setOpenLoginModal(false)}>Cancel
                             </button>
+                            <div className="mt-4">
+                                <GoogleLogin onSuccess={googleAuthSuccess}/>
+                            </div>
                         </div>
 
                         {errorMessage && <span className='text-danger'>{errorMessage}</span>}
@@ -246,6 +272,9 @@ function Header() {
                             <button className="btn btn-primary mt-4" style={{marginLeft: 10}}
                                     onClick={() => setOpenRegistrationModal(false)}>Cancel
                             </button>
+                            <div className="mt-4">
+                                <GoogleLogin onSuccess={googleAuthSuccess}/>
+                            </div>
                         </div>
 
                         {errorMessage && <span className='text-danger'>{errorMessage}</span>}

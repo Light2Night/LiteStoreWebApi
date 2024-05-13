@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using WebApi.Constants;
-using WebApi.Services.Interfaces;
-using WebApi.Services;
+﻿using AutoMapper;
 using Data.Entities.Identity;
-using WebApi.Models.Account;
-using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApi.Constants;
+using WebApi.Models.Account;
+using WebApi.Services;
+using WebApi.Services.Interfaces;
+using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace WebApi.Controllers;
 
@@ -15,20 +16,18 @@ namespace WebApi.Controllers;
 public class AccountController(
 	UserManager<User> userManager,
 	IJwtTokenService jwtTokenService,
-	IMapper mapper
+	IMapper mapper,
+	IConfiguration configuration
 	) : ControllerBase {
 
 	[HttpPost]
 	public async Task<IActionResult> Login([FromForm] LoginVm model) {
-		User? user = await userManager.Users
-			.Include(u => u.UserRoles)
-				.ThenInclude(ur => ur.Role)
-			.FirstOrDefaultAsync(u => u.Email == model.Email);
+		User? user = await userManager.FindByEmailAsync(model.Email);
 
 		if (user is null || !await userManager.CheckPasswordAsync(user, model.Password))
 			return BadRequest("Wrong authentication data");
 
-		return Ok(new { Token = jwtTokenService.CreateToken(user) });
+		return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
 	}
 
 	[HttpPost]
@@ -58,11 +57,45 @@ public class AccountController(
 				return BadRequest("Role assignment error");
 			}
 
-			return Ok(new { Token = jwtTokenService.CreateToken(user) });
+			return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
 		}
 		catch {
 			ImageWorker.DeleteImageIfExists(user.Photo);
 			throw;
 		}
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> GoogleSingInAsync([FromForm] GoogleSingInVm model) {
+		Payload payload = await ValidateAsync(
+			model.Credential,
+			new ValidationSettings {
+				Audience = [configuration["Authentication:Google:ClientId"]]
+			}
+		);
+
+		var user = await userManager.FindByEmailAsync(payload.Email);
+
+		if (user is null) {
+			using var httpClient = new HttpClient();
+
+			user = new User {
+				FirstName = payload.GivenName,
+				LastName = payload.FamilyName,
+				Email = payload.Email,
+				UserName = payload.Email,
+				Photo = await ImageWorker.SaveImageAsync(await httpClient.GetByteArrayAsync(payload.Picture))
+			};
+
+			IdentityResult identityResult = await userManager.CreateAsync(user);
+			if (!identityResult.Succeeded) {
+				ImageWorker.DeleteImage(user.Photo);
+				return BadRequest(identityResult.Errors);
+			}
+
+			await userManager.AddToRoleAsync(user, Roles.User);
+		}
+
+		return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
 	}
 }

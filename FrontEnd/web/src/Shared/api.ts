@@ -15,7 +15,7 @@ import IFilteredCustomersOrders from "../Interfaces/Api/IFilteredCustomersOrders
 import IFilteredOrders from "../Interfaces/Api/IFilteredOrders.ts";
 import IFilteredProducts from "../Interfaces/Api/IFilteredProducts.ts";
 
-export const apiUrl = "https://localhost:7000";
+export const apiUrl = import.meta.env.VITE_API_URL;
 export const imagesDir = apiUrl + "/Data/images/";
 
 const imagesControllerUrl = apiUrl + "/api/Images/";
@@ -54,7 +54,7 @@ export const createCategoryAsync = async (form: FormData) => {
 }
 
 export const editCategoryAsync = async (form: FormData) => {
-    return await axios.put(categoryControllerUrl + "Update", form, {
+    return await axios.patch(categoryControllerUrl + "Update", form, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -160,6 +160,14 @@ export const registrationAsync = async (form: FormData): Promise<IToken> => {
 
 export const loginAsync = async (form: FormData): Promise<IToken> => {
     return (await axios.post(accountControllerUrl + "Login", form, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })).data;
+}
+
+export const googleSingInAsync = async (form: FormData): Promise<IToken> => {
+    return (await axios.post(accountControllerUrl + "GoogleSingIn", form, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

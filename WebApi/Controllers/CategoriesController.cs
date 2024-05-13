@@ -80,7 +80,7 @@ public class CategoriesController(
 		return Ok();
 	}
 
-	[HttpPut]
+	[HttpPatch]
 	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> Update([FromForm] CategoryUpdateVm model) {
 		var validationResult = await updateValidator.ValidateAsync(model);
