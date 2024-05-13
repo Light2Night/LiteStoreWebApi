@@ -73,7 +73,7 @@ public class BasketController(
 		}
 	}
 
-	[HttpPatch("{productId} {quantity}")]
+	[HttpPatch("{productId}/{quantity}")]
 	public async Task<IActionResult> SetQuantity(long productId, int quantity) {
 		try {
 			if (quantity < 1)

@@ -101,7 +101,7 @@ export const getBasketItemsAsync = async (): Promise<IBasketItem[]> => {
 }
 
 export const setQuantityAsync = async (productId: number, quantity: number) => {
-    return await axios.patch(`${basketControllerUrl}SetQuantity/${productId} ${quantity}`);
+    return await axios.patch(`${basketControllerUrl}SetQuantity/${productId}/${quantity}`);
 }
 
 export const deleteBasketProductAsync = async (productId: number) => {

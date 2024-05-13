@@ -66,7 +66,7 @@ public class AccountController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> GoogleSingInAsync([FromForm] GoogleSingInVm model) {
+	public async Task<IActionResult> GoogleSingIn([FromForm] GoogleSingInVm model) {
 		Payload payload = await ValidateAsync(
 			model.Credential,
 			new ValidationSettings {
