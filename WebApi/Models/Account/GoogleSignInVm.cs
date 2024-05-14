@@ -1,5 +1,5 @@
 ﻿namespace WebApi.Models.Account;
 
-public class GoogleSingInVm {
+public class GoogleSignInVm {
 	public string Credential { get; set; } = null!;
 }

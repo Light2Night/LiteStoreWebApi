@@ -1,7 +1,7 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {googleSingInAsync, imagesDir, loginAsync, registrationAsync} from "../Shared/api.ts";
+import {googleSignInAsync, imagesDir, signInAsync, registrationAsync} from "../Shared/api.ts";
 import {Box, Modal} from "@mui/material";
 import styles from '../styles.module.css';
 import ILoginData from "../Interfaces/Formik/ILoginData.tsx";
@@ -37,7 +37,7 @@ function Header() {
         const formData = new FormData();
         formData.append("credential", credentialResponse.credential);
 
-        const {token} = await googleSingInAsync(formData);
+        const {token} = await googleSignInAsync(formData);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         localStorage.token = token;
@@ -79,7 +79,7 @@ function Header() {
                 formData.append('password', password);
 
                 try {
-                    const result = await loginAsync(formData);
+                    const result = await signInAsync(formData);
                     const {token} = result;
 
                     axios.defaults.headers.common["Authorization"] = "Bearer " + token;

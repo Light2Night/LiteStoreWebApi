@@ -19,9 +19,9 @@ export const apiUrl = import.meta.env.VITE_API_URL;
 export const imagesDir = apiUrl + "/Data/images/";
 
 const imagesControllerUrl = apiUrl + "/api/Images/";
+const accountControllerUrl = apiUrl + "/api/Account/";
 const categoryControllerUrl = apiUrl + "/api/Categories/";
 const productsControllerUrl = apiUrl + "/api/Products/";
-const accountControllerUrl = apiUrl + "/api/Account/";
 const basketControllerUrl = apiUrl + "/api/Basket/";
 const areasControllerUrl = apiUrl + "/api/Areas/";
 const settlementsControllerUrl = apiUrl + "/api/Settlements/";
@@ -32,6 +32,32 @@ export const getImageAsync = async (name: string): Promise<Blob> => {
     const response = await axios.get<Blob>(`${imagesControllerUrl}Get/${name}`, {responseType: 'blob'});
     return response.data;
 }
+
+
+export const signInAsync = async (form: FormData): Promise<IToken> => {
+    return (await axios.post(accountControllerUrl + "SignIn", form, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })).data;
+}
+
+export const registrationAsync = async (form: FormData): Promise<IToken> => {
+    return (await axios.post(accountControllerUrl + "Registration", form, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })).data;
+}
+
+export const googleSignInAsync = async (form: FormData): Promise<IToken> => {
+    return (await axios.post(accountControllerUrl + "GoogleSignIn", form, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })).data;
+}
+
 
 export const getCategoriesAsync = async (): Promise<ICategory[]> => {
     const response = await axios.get<ICategory[]>(categoryControllerUrl + "GetAll");
@@ -147,29 +173,4 @@ export const getCustomersOrdersFilteredAsync = async (filter: IOrderFilter): Pro
         params: filter
     });
     return response.data;
-}
-
-
-export const registrationAsync = async (form: FormData): Promise<IToken> => {
-    return (await axios.post(accountControllerUrl + "Registration", form, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })).data;
-}
-
-export const loginAsync = async (form: FormData): Promise<IToken> => {
-    return (await axios.post(accountControllerUrl + "Login", form, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })).data;
-}
-
-export const googleSingInAsync = async (form: FormData): Promise<IToken> => {
-    return (await axios.post(accountControllerUrl + "GoogleSingIn", form, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })).data;
 }

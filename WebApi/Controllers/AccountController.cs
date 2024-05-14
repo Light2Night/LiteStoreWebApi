@@ -21,7 +21,7 @@ public class AccountController(
 	) : ControllerBase {
 
 	[HttpPost]
-	public async Task<IActionResult> Login([FromForm] LoginVm model) {
+	public async Task<IActionResult> SignIn([FromForm] LoginVm model) {
 		User? user = await userManager.FindByEmailAsync(model.Email);
 
 		if (user is null || !await userManager.CheckPasswordAsync(user, model.Password))
@@ -66,7 +66,7 @@ public class AccountController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> GoogleSingIn([FromForm] GoogleSingInVm model) {
+	public async Task<IActionResult> GoogleSignIn([FromForm] GoogleSignInVm model) {
 		Payload payload = await ValidateAsync(
 			model.Credential,
 			new ValidationSettings {
