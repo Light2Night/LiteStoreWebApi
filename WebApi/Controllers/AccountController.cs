@@ -2,7 +2,6 @@
 using Data.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebApi.Constants;
 using WebApi.Models.Account;
 using WebApi.Services;
@@ -21,13 +20,15 @@ public class AccountController(
 	) : ControllerBase {
 
 	[HttpPost]
-	public async Task<IActionResult> SignIn([FromForm] LoginVm model) {
+	public async Task<IActionResult> SignIn([FromForm] SignInVm model) {
 		User? user = await userManager.FindByEmailAsync(model.Email);
 
 		if (user is null || !await userManager.CheckPasswordAsync(user, model.Password))
 			return BadRequest("Wrong authentication data");
 
-		return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
+		return Ok(new JwtTokenResponse {
+			Token = await jwtTokenService.CreateTokenAsync(user)
+		});
 	}
 
 	[HttpPost]
@@ -57,7 +58,9 @@ public class AccountController(
 				return BadRequest("Role assignment error");
 			}
 
-			return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
+			return Ok(new JwtTokenResponse {
+				Token = await jwtTokenService.CreateTokenAsync(user)
+			});
 		}
 		catch {
 			ImageWorker.DeleteImageIfExists(user.Photo);
@@ -96,6 +99,8 @@ public class AccountController(
 			await userManager.AddToRoleAsync(user, Roles.User);
 		}
 
-		return Ok(new { Token = await jwtTokenService.CreateTokenAsync(user) });
+		return Ok(new JwtTokenResponse {
+			Token = await jwtTokenService.CreateTokenAsync(user)
+		});
 	}
 }
